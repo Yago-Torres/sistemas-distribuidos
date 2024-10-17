@@ -87,25 +87,19 @@ func (ra *RASharedDB) PreProtocol() {
 	ra.Mutex.Lock()
 	ra.ReqCS = true
 	ra.Clock[ra.Me-1] = ra.HighSeqNum + 1
-	for i := range ra.Clock {
-		fmt.Printf("[%d], ", ra.Clock[i])
-	}
-	fmt.Println()
 	req = Request{ra.Clock, ra.Me, ra.Task}
 	for i := 0; i < ra.N; i++ {
 		if i+1 != ra.Me {
 			ra.AwReps[i] = true
 			ra.RepDefd[i] = false
-			fmt.Println("Mandando solicitud al proceso", i+1, "con i=", i)
+			fmt.Println("Mandando solicitud al proceso", i+1)
 			time.Sleep(3 * time.Second)
 			ra.Ms.Send(i+1, req)
 			ra.OutRepCnt++
 		}
 	}
 	ra.Mutex.Unlock()
-	fmt.Println(ra.Me, "espera que le den permiso para sección crítica")
 	<-ra.Chrep
-	fmt.Println(ra.Me, "entra en la sección crítica")
 }
 
 func messageHandler(ra *RASharedDB) {
@@ -131,25 +125,13 @@ func maxV(v []int) int {
 }
 
 func handleRequest(r *Request, ra *RASharedDB) {
-	var deferr bool
-	fmt.Println(ra.Me, "ha recibido una Request de", r.Task, "de", r.Pid)
-	fmt.Print("reloj propio: ")
-	for i := range ra.Clock {
-		fmt.Printf("[%d] ", ra.Clock[i])
-	}
-	fmt.Println()
-	fmt.Print("Reloj recibido: ")
-	for i := range r.Clock {
-		fmt.Printf("[%d] ", r.Clock[i])
-	}
-	fmt.Println()
+	var deferr bool //Esta variable determina si la respuesta se aplazará o se dará de inmediato
 	ra.Mutex.Lock()
 	if (exclusionMatrix[ra.Task])[r.Task] {
 		if !ra.ReqCS {
 			deferr = false
 		} else {
 			if isVectorLesser(ra.Clock, r.Clock) {
-				fmt.Println("El reloj de", ra.Me, "es menor que el de", r.Pid)
 				deferr = true
 			} else {
 				if isVectorGreater(ra.Clock, r.Clock) { //Si mi reloj es mayor
@@ -169,10 +151,8 @@ func handleRequest(r *Request, ra *RASharedDB) {
 		deferr = false
 	}
 	if deferr {
-		fmt.Println(ra.Me, "ha diferido la respuesta a", r.Pid)
 		ra.RepDefd[r.Pid-1] = true
 	} else {
-		fmt.Println(ra.Me, "concede permiso a", r.Pid)
 		rep := Reply{ra.Me}
 		ra.Ms.Send(r.Pid, rep)
 	}
@@ -184,13 +164,14 @@ func handleRequest(r *Request, ra *RASharedDB) {
 }
 
 func handleReply(r *Reply, ra *RASharedDB) {
-	fmt.Println(ra.Me, "ha recibido una Reply de", r.Pid)
+	fmt.Println("Recibida respuesta de", r.Pid)
 	ra.Mutex.Lock()
 	defer ra.Mutex.Unlock()
 	if ra.AwReps[r.Pid-1] {
 		ra.OutRepCnt--
 
 		if ra.OutRepCnt == 0 {
+			fmt.Println("Todas las respuestas han sido recibidas...")
 			ra.Chrep <- true
 		}
 	}
@@ -238,7 +219,6 @@ func (ra *RASharedDB) PostProtocol() {
 			ra.Ms.Send(i+1, rep)
 		}
 	}
-	fmt.Println(ra.Me, "sale de la sección crítica")
 	ra.Mutex.Unlock()
 }
 

@@ -33,22 +33,24 @@ func main() {
 	ra := ra.New(me, "../../ms/users.txt", "ESCRITURA")
 	for i := 0; i < 5; i++ {
 		ra.PreProtocol()
-		fmt.Println(me, " entra en la sección crítica ESCRITURA")
+		fmt.Println("Entrando en la sección crítica para escritura...")
 		escribir := "\n" + "Escritura de " + strconv.Itoa(me)
 		EscribirFichero(escribir, "../../fichero.txt")
+		fmt.Println("El fichero ha sido escrito")
 		for i, peer := range ra.Ms.Peers {
 			if i+1 != me {
 				ip := strings.Split(peer, ":")[0]
 				path := "distribuidos/practica2/"
 				destination := ip + ":" + path
-				fmt.Println("scp", "../fichero.txt", destination)
 				cmd := exec.Command("scp", "../../fichero.txt", destination)
 				err := cmd.Run()
+
 				if err != nil {
 					fmt.Println("Error copiando el fichero")
 				}
 			}
 		}
+		fmt.Println("Saliendo de la sección crítica...")
 		ra.PostProtocol()
 	}
 }

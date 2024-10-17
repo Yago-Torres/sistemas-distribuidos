@@ -34,14 +34,14 @@ func main() {
 	}
 	ra := ra.New(me, "../../ms/users.txt", "LECTURA")
 	for i := 0; i < 5; i++ {
-		fmt.Println(me, "va al preprotocol")
 		ra.PreProtocol()
-		fmt.Println(me, " entra en la sección crítica LECTURA")
+		fmt.Println("Entrando en la sección crítica para lectura...")
 		contenido, err := LeerFichero("../../fichero.txt")
 		if err != nil {
 			fmt.Println(me, "no ha podido leer el fichero")
 		}
 		fmt.Println(contenido)
+		fmt.Println("Saliendo de la sección crítica...")
 		ra.PostProtocol()
 	}
 }
