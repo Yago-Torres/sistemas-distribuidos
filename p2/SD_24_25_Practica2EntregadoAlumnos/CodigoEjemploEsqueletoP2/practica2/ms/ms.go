@@ -20,7 +20,7 @@ type Message interface{}
 
 type MessageSystem struct {
 	mbox  chan Message
-	peers []string
+	Peers []string
 	done  chan bool
 	me    int
 }
@@ -51,7 +51,7 @@ func parsePeers(path string) (lines []string) {
 // Pre: pid en {1..n}, el conjunto de procesos del SD
 // Post: envía el mensaje msg a pid
 func (ms *MessageSystem) Send(pid int, msg Message) {
-	conn, err := net.Dial("tcp", ms.peers[pid-1])
+	conn, err := net.Dial("tcp", ms.Peers[pid-1])
 	checkError(err)
 	encoder := gob.NewEncoder(conn)
 	err = encoder.Encode(&msg)
@@ -83,14 +83,14 @@ func Register(messageTypes []Message) {
 //	messageTypes es un slice con todos los tipos de mensajes que los procesos se pueden intercambiar a través de este ms
 func New(whoIam int, usersFile string, messageTypes []Message) (ms MessageSystem) {
 	ms.me = whoIam
-	ms.peers = parsePeers(usersFile)
+	ms.Peers = parsePeers(usersFile)
 	ms.mbox = make(chan Message, MAXMESSAGES)
 	ms.done = make(chan bool)
 	Register(messageTypes)
 	go func() {
-		listener, err := net.Listen("tcp", ms.peers[ms.me-1])
+		listener, err := net.Listen("tcp", ms.Peers[ms.me-1])
 		checkError(err)
-		fmt.Println("Process listening at " + ms.peers[ms.me-1])
+		fmt.Println("Process listening at " + ms.Peers[ms.me-1])
 		defer close(ms.mbox)
 		for {
 			select {
