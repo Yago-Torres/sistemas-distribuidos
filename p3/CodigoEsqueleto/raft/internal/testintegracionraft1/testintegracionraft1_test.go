@@ -24,7 +24,7 @@ const (
 	REPLICA3 = "127.0.0.1:29003"
 
 	// paquete main de ejecutables relativos a directorio raiz de modulo
-	EXECREPLICA = "cmd/srvraft/main.go"
+	EXECREPLICA = "raft/cmd/srvraft/main.go"
 
 	// comando completo a ejecutar en máquinas remota con ssh. Ejemplo :
 	// 				cd $HOME/raft; go run cmd/srvraft/main.go 127.0.0.1:29001
@@ -52,7 +52,6 @@ func TestPrimerasPruebas(t *testing.T) { // (m *testing.M) {
 	// tear down code
 	// eliminar procesos en máquinas remotas
 	defer cfg.stop()
-
 	// Run test sequence
 
 	// Test1 : No debería haber ningun primario, si SV no ha recibido aún latidos
@@ -279,6 +278,19 @@ func (cfg *configDespliegue) comprobarEstadoRemoto(idNodoDeseado int,
 	idNodo, mandato, esLider, idLider := cfg.obtenerEstadoRemoto(idNodoDeseado)
 
 	//cfg.t.Log("Estado replica 0: ", idNodo, mandato, esLider, idLider, "\n")
+
+	if idNodo != idNodoDeseado {
+		fmt.Printf("Error: idNodo es %d, pero se esperaba %d en subtest %s\n", idNodo, idNodoDeseado, cfg.t.Name())
+	}
+	if mandato != mandatoDeseado {
+		fmt.Printf("Error: mandato es %d, pero se esperaba %d en subtest %s\n", mandato, mandatoDeseado, cfg.t.Name())
+	}
+	if esLider != esLiderDeseado {
+		fmt.Printf("Error: esLider es %t, pero se esperaba %t en subtest %s\n", esLider, esLiderDeseado, cfg.t.Name())
+	}
+	if idLider != IdLiderDeseado {
+		fmt.Printf("Error: idLider es %d, pero se esperaba %d en subtest %s\n", idLider, IdLiderDeseado, cfg.t.Name())
+	}
 
 	if idNodo != idNodoDeseado || mandato != mandatoDeseado ||
 		esLider != esLiderDeseado || idLider != IdLiderDeseado {
