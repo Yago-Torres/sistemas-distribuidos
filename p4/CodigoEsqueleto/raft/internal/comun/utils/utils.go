@@ -11,7 +11,7 @@ var generator = rand.New(seed)
 
 // ElectionTimeout especifica el tiempo para comenzar una nueva elección.
 func ElectionTimeout() time.Duration {
-	return time.Duration(generator.Intn(150)+150) * time.Millisecond // 100-500ms
+	return time.Duration(generator.Intn(400)+100) * time.Millisecond // 100-500ms
 }
 
 /**

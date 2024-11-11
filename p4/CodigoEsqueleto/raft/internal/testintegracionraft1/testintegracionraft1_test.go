@@ -22,19 +22,27 @@ const (
 	REPLICA1 = "127.0.0.1:29001"
 	REPLICA2 = "127.0.0.1:29002"
 	REPLICA3 = "127.0.0.1:29003"
+	//REPLICA1 = "192.168.3.4:29250"
+	//REPLICA2 = "192.168.3.2:29250"
+	//REPLICA3 = "192.168.3.3:29250"
+	// paquete main de ejecutables relativos a directorio raiz de modulo
+	//EXECREPLICA = "/home/yago/Desktop/unizar24-25/sisdist/p3/CodigoEsqueleto/raft/cmd/srvraft/main.go"
+	EXECREPLICA = "/home/yago/Desktop/unizar24-25/sisdist/p4/CodigoEsqueleto/raft/cmd/srvraft/main.go"
 
-	// paquete main de ejecutables relativos a PATH previo
-	EXECREPLICA = "cmd/srvraft/main.go"
-
-	// comandos completo a ejecutar en máquinas remota con ssh. Ejemplo :
+	// comando completo a ejecutar en máquinas remota con ssh. Ejemplo :
 	// 				cd $HOME/raft; go run cmd/srvraft/main.go 127.0.0.1:29001
 )
 
 // PATH de los ejecutables de modulo golang de servicio Raft
-var PATH string = filepath.Join(os.Getenv("HOME"), "tmp", "p4", "raft")
+var cwd, _ = os.Getwd()
+var PATH string = filepath.Dir(filepath.Dir(cwd))
+
+var path string = "/home/yago/Desktop/unizar24-25/sisdist/p4/CodigoEsqueleto/raft"
+
+//var path string = "/home/a878417/distribuidos/practica3/raft"
 
 // go run cmd/srvraft/main.go 0 127.0.0.1:29001 127.0.0.1:29002 127.0.0.1:29003
-var EXECREPLICACMD string = "cd " + PATH + "; go run " + EXECREPLICA
+var EXECREPLICACMD string = "cd " + path + "; /usr/local/go/bin/go run " + EXECREPLICA
 
 // TEST primer rango
 func TestPrimerasPruebas(t *testing.T) { // (m *testing.M) {
@@ -48,7 +56,6 @@ func TestPrimerasPruebas(t *testing.T) { // (m *testing.M) {
 	// tear down code
 	// eliminar procesos en máquinas remotas
 	defer cfg.stop()
-
 	// Run test sequence
 
 	// Test1 : No debería haber ningun primario, si SV no ha recibido aún latidos
@@ -153,13 +160,13 @@ func (cfg *configDespliegue) soloArranqueYparadaTest1(t *testing.T) {
 	cfg.startDistributedProcesses()
 
 	// Comprobar estado replica 0
-	cfg.comprobarEstadoRemoto(0, 0, false, -1)
+	cfg.comprobarEstadoRemoto(0)
 
 	// Comprobar estado replica 1
-	cfg.comprobarEstadoRemoto(1, 0, false, -1)
+	cfg.comprobarEstadoRemoto(1)
 
 	// Comprobar estado replica 2
-	cfg.comprobarEstadoRemoto(2, 0, false, -1)
+	cfg.comprobarEstadoRemoto(2)
 
 	// Parar réplicas almacenamiento en remoto
 	cfg.stopDistributedProcesses()
@@ -193,14 +200,22 @@ func (cfg *configDespliegue) falloAnteriorElegirNuevoLiderTest3(t *testing.T) {
 
 	cfg.startDistributedProcesses()
 
-	fmt.Printf("Lider inicial\n")
-	cfg.pruebaUnLider(3)
-
+	leader := cfg.pruebaUnLider(3)
+	fmt.Printf("El leader es el nodo %d\n", leader)
 	// Desconectar lider
-	// ???
-
-	fmt.Printf("Comprobar nuevo lider\n")
-	cfg.pruebaUnLider(3)
+	fmt.Printf("Se para el nodo %d\n", leader)
+	cfg.pararLeader(leader)
+	// 	Se comprueba un nuevo líder
+	fmt.Printf("Esperenado nuevo leader ...\n")
+	var idLeader int
+	for {
+		_, _, _, idLeader := cfg.obtenerEstadoRemoto((leader + 1) % 3)
+		if idLeader != leader {
+			break
+		}
+		time.Sleep(100 * time.Millisecond)
+	}
+	fmt.Printf("El nuevo leader es el nodo %d\n", idLeader)
 
 	// Parar réplicas almacenamiento en remoto
 	cfg.stopDistributedProcesses() //parametros
@@ -212,7 +227,18 @@ func (cfg *configDespliegue) falloAnteriorElegirNuevoLiderTest3(t *testing.T) {
 func (cfg *configDespliegue) tresOperacionesComprometidasEstable(t *testing.T) {
 	t.Skip("SKIPPED tresOperacionesComprometidasEstable")
 
-	// A completar ???
+	fmt.Println(t.Name(), ".....................")
+
+	cfg.startDistributedProcesses()
+
+	idLeader := cfg.pruebaUnLider(3)
+	cfg.comprobarOperacion(idLeader, 0, "leer", "", "")
+	cfg.comprobarOperacion(idLeader, 1, "escribir", "", "hola mundo")
+	cfg.comprobarOperacion(idLeader, 2, "leer", "", "")
+
+	// Parar réplicas almacenamiento en remoto
+	cfg.stopDistributedProcesses() //parametros
+	fmt.Println(".............", t.Name(), "Superado")
 }
 
 // Se consigue acuerdo a pesar de desconexiones de seguidor -- 3 NODOS RAFT

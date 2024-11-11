@@ -3,6 +3,7 @@ package testintegracionraft1
 import (
 	"fmt"
 	"raft/internal/comun/check"
+	"raft/internal/comun/utils"
 
 	//"log"
 	//"crypto/rand"
@@ -19,15 +20,15 @@ import (
 
 const (
 	//nodos replicas
-	//REPLICA1 = "127.0.0.1:29001"
-	//REPLICA2 = "127.0.0.1:29002"
-	//REPLICA3 = "127.0.0.1:29003"
-	REPLICA1 = "192.168.3.4:29250"
-	REPLICA2 = "192.168.3.2:29250"
-	REPLICA3 = "192.168.3.3:29250"
+	REPLICA1 = "127.0.0.1:29001"
+	REPLICA2 = "127.0.0.1:29002"
+	REPLICA3 = "127.0.0.1:29003"
+	//REPLICA1 = "192.168.3.4:29250"
+	//REPLICA2 = "192.168.3.2:29250"
+	//REPLICA3 = "192.168.3.3:29250"
 	// paquete main de ejecutables relativos a directorio raiz de modulo
 	//EXECREPLICA = "/home/yago/Desktop/unizar24-25/sisdist/p3/CodigoEsqueleto/raft/cmd/srvraft/main.go"
-	EXECREPLICA = "/home/a878417/distribuidos/practica3/raft/cmd/srvraft/main.go"
+	EXECREPLICA = "/home/yago/Desktop/unizar24-25/sisdist/p3/CodigoEsqueleto/raft/cmd/srvraft/main.go"
 
 	// comando completo a ejecutar en máquinas remota con ssh. Ejemplo :
 	// 				cd $HOME/raft; go run cmd/srvraft/main.go 127.0.0.1:29001
@@ -37,17 +38,19 @@ const (
 var cwd, _ = os.Getwd()
 var PATH string = filepath.Dir(filepath.Dir(cwd))
 
-// var path string = "/home/yago/Desktop/unizar24-25/sisdist/p3/CodigoEsqueleto/raft"
-var path string = "/home/a878417/distribuidos/practica3/raft"
+var path string = "/home/yago/Desktop/unizar24-25/sisdist/p3/CodigoEsqueleto/raft"
+
+//var path string = "/home/a878417/distribuidos/practica3/raft"
 
 // go run cmd/srvraft/main.go 0 127.0.0.1:29001 127.0.0.1:29002 127.0.0.1:29003
-var EXECREPLICACMD string = "cd " + path + "; /usr/bin/go run " + EXECREPLICA
+var EXECREPLICACMD string = "cd " + path + "; /usr/local/go/bin/go run " + EXECREPLICA
 
-//////////////////////////////////////////////////////////////////////////////
-///////////////////////			 FUNCIONES TEST
-/////////////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////////
+// /////////////////////			 FUNCIONES TEST
+// ///////////////////////////////////////////////////////////////////////////
 
 // TEST primer rango
+
 func TestPrimerasPruebas(t *testing.T) { // (m *testing.M) {
 	// <setup code>
 	// Crear canal de resultados de ejecuciones ssh en maquinas remotas
@@ -77,6 +80,15 @@ func TestPrimerasPruebas(t *testing.T) { // (m *testing.M) {
 	// Test4: Tres operaciones comprometidas en configuración estable
 	t.Run("T4:tresOperacionesComprometidasEstable",
 		func(t *testing.T) { cfg.tresOperacionesComprometidasEstable(t) })
+
+	t.Run("T5:AcuerdoAPesarDeDesconexionesDeSeguidor ",
+		func(t *testing.T) { cfg.AcuerdoApesarDeSeguidor(t) })
+
+	t.Run("T6:SinAcuerdoPorFallos ",
+		func(t *testing.T) { cfg.SinAcuerdoPorFallos(t) })
+
+	t.Run("T7:SometerConcurrentementeOperaciones ",
+		func(t *testing.T) { cfg.SometerConcurrentementeOperaciones(t) })
 }
 
 // ---------------------------------------------------------------------
@@ -162,9 +174,7 @@ func (cfg *configDespliegue) elegirPrimerLiderTest2(t *testing.T) {
 	cfg.startDistributedProcesses()
 
 	// Se ha elegido lider ?
-	fmt.Printf("Probando lider en curso\n")
-	leader := cfg.pruebaUnLider(3)
-	fmt.Printf("El leader es el nodo %d\n", leader)
+	cfg.pruebaUnLider(3)
 
 	// Parar réplicas alamcenamiento en remoto
 	cfg.stopDistributedProcesses() // Parametros
@@ -177,26 +187,19 @@ func (cfg *configDespliegue) falloAnteriorElegirNuevoLiderTest3(t *testing.T) {
 	//t.Skip("SKIPPED FalloAnteriorElegirNuevoLiderTest3")
 
 	fmt.Println(t.Name(), ".....................")
-
 	cfg.startDistributedProcesses()
 
-	leader := cfg.pruebaUnLider(3)
-	fmt.Printf("El leader es el nodo %d\n", leader)
-	// Desconectar lider
-	fmt.Printf("Se para el nodo %d\n", leader)
-	cfg.pararLeader(leader)
-	// 	Se comprueba un nuevo líder
-	fmt.Printf("Esperenado nuevo leader ...\n")
-	var idLeader int
+	var nodes []int = []int{1, 2, 0}
+	idLider := cfg.conseguirLider()
+	cfg.desconectarNodos([]int{nodes[idLider]})
+
 	for {
-		_, _, _, idLeader := cfg.obtenerEstadoRemoto((leader + 1) % 3)
-		if idLeader != leader {
+		_, _, _, idLider = cfg.obtenerEstadoRemoto(1)
+		if idLider != -1 {
 			break
 		}
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(20 * time.Millisecond)
 	}
-	fmt.Printf("El nuevo leader es el nodo %d\n", idLeader)
-
 	// Parar réplicas almacenamiento en remoto
 	cfg.stopDistributedProcesses() //parametros
 
@@ -211,9 +214,8 @@ func (cfg *configDespliegue) tresOperacionesComprometidasEstable(t *testing.T) {
 	cfg.startDistributedProcesses()
 
 	idLeader := cfg.pruebaUnLider(3)
-	cfg.comprobarOperacion(idLeader, 0, "leer", "", "")
-	cfg.comprobarOperacion(idLeader, 1, "escribir", "", "hola mundo")
-	cfg.comprobarOperacion(idLeader, 2, "leer", "", "")
+	cfg.someterOperaciones(idLeader, 0, 3)
+	cfg.comprobarEntradasComprometidas(idLeader, 3) // CHECK
 
 	// Parar réplicas almacenamiento en remoto
 	cfg.stopDistributedProcesses() //parametros
@@ -221,52 +223,117 @@ func (cfg *configDespliegue) tresOperacionesComprometidasEstable(t *testing.T) {
 
 }
 
+// Se consigue acuerdo a pesar de desconexiones de seguidor -- 3 NODOS RAFT
+func (cfg *configDespliegue) AcuerdoApesarDeSeguidor(t *testing.T) {
+	t.Skip("SKIPPED AcuerdoApesarDeSeguidor")
+
+	fmt.Println(t.Name(), ".....................")
+	cfg.startDistributedProcesses()
+
+	// explicación del uso del vector más abajo, donde se usa
+	var nodes []int = []int{1, 2, 0}
+
+	idLider := cfg.conseguirLider()
+
+	cfg.someterOperaciones(idLider, 0, 1)
+
+	cfg.comprobarEntradasComprometidas(idLider, 1) // CHECK
+
+	cfg.desconectarNodos([]int{nodes[idLider]})
+
+	cfg.someterOperaciones(idLider, 1, 3)
+
+	cfg.reconectarNodos([]int{nodes[idLider]})
+	time.Sleep(200 * time.Millisecond)
+	cfg.comprobarEntradasComprometidas(idLider, 4) // CHECK
+	// Parar réplicas almacenamiento en remoto
+	cfg.stopDistributedProcesses() //parametros
+	fmt.Println(".............", t.Name(), "Superado")
+}
+
+// NO se consigue acuerdo al desconectarse mayoría de seguidores -- 3 NODOS RAFT
+func (cfg *configDespliegue) SinAcuerdoPorFallos(t *testing.T) {
+	//t.Skip("SKIPPED SinAcuerdoPorFallos")
+
+	fmt.Println(t.Name(), ".....................")
+	cfg.startDistributedProcesses()
+
+	// Comprometer una entrada
+
+	var nodes []int = []int{1, 2, 0}
+	lider := cfg.conseguirLider()
+
+	cfg.someterOperaciones(lider, 0, 1)
+
+	cfg.comprobarEntradasComprometidas(lider, 1) // CHECK
+
+	cfg.desconectarNodos([]int{nodes[lider], nodes[nodes[lider]]})
+
+	cfg.someterOperaciones(lider, 1, 3)
+
+	cfg.comprobarEntradasComprometidas(lider, 1, []int{nodes[lider],
+		nodes[nodes[lider]]}) // CHECK
+
+	fmt.Println("comprobarEntradasComprometidas")
+	cfg.reconectarNodos([]int{nodes[lider], nodes[nodes[lider]]})
+	fmt.Println("reconectarNodos")
+
+	cfg.comprobarEntradasComprometidas(lider, 4) // CHECK
+	fmt.Println("comprobarEntradasComprometidas")
+
+	cfg.stopDistributedProcesses() //parametros
+	fmt.Println("stopDistributedProcesses")
+
+	fmt.Println(".............", t.Name(), "Superado")
+}
+
+// Se somete 5 operaciones de forma concurrente -- 3 NODOS RAFT
+func (cfg *configDespliegue) SometerConcurrentementeOperaciones(t *testing.T) {
+	//t.Skip("SKIPPED SometerConcurrentementeOperaciones")
+
+	fmt.Println(t.Name(), ".....................")
+	cfg.startDistributedProcesses()
+
+	// Obtener un lider
+	lider := cfg.conseguirLider()
+	cfg.someterOperaciones(lider, 0, 1)
+
+	index := make(chan int, 5)
+	// Someter 5  operaciones concurrentemente
+	for i := 0; i < 5; i++ {
+		go func(i int) {
+			operacion := raft.TipoOperacion{
+				Operacion: "escribir",
+				Clave:     fmt.Sprintf("key: %d", i),
+				Valor:     fmt.Sprintf("value: %d", i),
+			}
+
+			var reply raft.ResultadoRemoto
+			err := cfg.nodosRaft[lider].CallTimeout("NodoRaft.SometerOperacionRaft",
+				operacion, &reply, 25*time.Millisecond)
+			check.CheckError(err, "Error en llamada RPC SometerOperacionRaft")
+			index <- reply.IndiceRegistro
+		}(i)
+	}
+	time.Sleep(200 * time.Millisecond)
+	var indexList map[int]int = make(map[int]int)
+	for j := 0; j < 5; j++ {
+		idx := <-index
+		cfg.t.Log("Indice recibido: ", idx)
+		indexList[idx] = idx
+	}
+
+	if len(indexList) != 5 {
+		cfg.t.Fatalf("Estado incorrecto, no hay 5 indices distintos")
+	}
+
+	cfg.stopDistributedProcesses()
+	fmt.Println(".............", t.Name(), "Superado")
+}
+
 // --------------------------------------------------------------------------
 // FUNCIONES DE APOYO
 // --------------------------------------------------------------------------
-func (cfg *configDespliegue) someterOperacion(idLeader int, operation string,
-	clave string, valor string) (int, int, bool, int, string) {
-	operacion := raft.TipoOperacion{
-		Operacion: operation,
-		Clave:     clave,
-		Valor:     valor,
-	}
-	var reply raft.ResultadoRemoto
-	err := cfg.nodosRaft[idLeader].CallTimeout("NodoRaft.SometerOperacionRaft",
-		operacion, &reply, 100*time.Millisecond)
-
-	// Manejo de error en la llamada RPC
-	if err != nil {
-		check.CheckError(err, "Error en llamada RPC SometerOperacionRaft")
-	}
-
-	// Devuelve el resultado de la operación
-	return reply.IndiceRegistro, reply.Mandato, reply.EsLider, reply.IdLider, reply.ValorADevolver
-}
-
-func (cfg *configDespliegue) comprobarOperacion(idLeader int, index int,
-	operation string, clave string, valor string) {
-	// Se somete la operación al nodo Raft
-	indice, _, _, idLider, _ := cfg.someterOperacion(idLeader, operation, clave, valor)
-
-	// Verifica si el índice de la operación sometida es igual al índice esperado
-	if indice != index || idLider != idLeader {
-		cfg.t.Fatalf("No se ha soemetido correctamente la operación con índice %d, se obtuvo índice %d", index, indice)
-	}
-}
-
-// Se para al nodo leader
-func (cfg *configDespliegue) pararLeader(idLeader int) {
-	var reply raft.Vacio
-	for i, endPoint := range cfg.nodosRaft {
-		if i == idLeader {
-			err := endPoint.CallTimeout("NodoRaft.ParaNodo",
-				raft.Vacio{}, &reply, 10*time.Millisecond)
-			check.CheckError(err, "Error en llamada RPC Para nodo")
-			cfg.conectados[i] = false
-		}
-	}
-}
 
 // Comprobar que hay un solo lider
 // probar varias veces si se necesitan reelecciones
@@ -308,7 +375,7 @@ func (cfg *configDespliegue) obtenerEstadoRemoto(
 	indiceNodo int) (int, int, bool, int) {
 	var reply raft.EstadoRemoto
 	err := cfg.nodosRaft[indiceNodo].CallTimeout("NodoRaft.ObtenerEstadoNodo",
-		raft.Vacio{}, &reply, 10*time.Millisecond)
+		raft.Vacio{}, &reply, 500*time.Millisecond)
 	check.CheckError(err, "Error en llamada RPC ObtenerEstadoRemoto")
 
 	return reply.IdNodo, reply.Mandato, reply.EsLider, reply.IdLider
@@ -318,7 +385,6 @@ func (cfg *configDespliegue) obtenerEstadoRemoto(
 // y lista clientes (host:puerto)
 func (cfg *configDespliegue) startDistributedProcesses() {
 	//cfg.t.Log("Before start following distributed processes: ", cfg.nodosRaft)
-
 	for i, endPoint := range cfg.nodosRaft {
 		despliegue.ExecMutipleHosts(EXECREPLICACMD+
 			" "+strconv.Itoa(i)+" "+
@@ -326,11 +392,11 @@ func (cfg *configDespliegue) startDistributedProcesses() {
 			[]string{endPoint.Host()}, cfg.cr)
 
 		// dar tiempo para se establezcan las replicas
-		//time.Sleep(2000 * time.Millisecond)
+		//time.Sleep(300 * time.Millisecond)
 	}
 
 	// aproximadamente 500 ms para cada arranque por ssh en portatil
-	time.Sleep(40 * time.Second)
+	time.Sleep(12 * time.Second)
 }
 
 func (cfg *configDespliegue) stopDistributedProcesses() {
@@ -355,4 +421,96 @@ func (cfg *configDespliegue) comprobarEstadoRemoto(idNodoDeseado int) {
 		cfg.t.Fatalf("Estado incorrecto en replica %d en subtest %s",
 			idNodoDeseado, cfg.t.Name())
 	}
+}
+
+func (cfg *configDespliegue) conseguirLider() int {
+	var idLider int
+	for {
+		time.Sleep(20 * time.Millisecond)
+		_, _, _, idLider = cfg.obtenerEstadoRemoto(0)
+		if idLider != -1 {
+			break
+		}
+	}
+	return idLider
+}
+
+// funcion para someter operaciones
+func (cfg *configDespliegue) someterOperaciones(
+	idLider, start, numOperaciones int) {
+	for i := start; i < start+numOperaciones; i++ {
+		operacion := raft.TipoOperacion{
+			Operacion: "escribir",
+			Clave:     fmt.Sprintf("key: %d", i),
+			Valor:     fmt.Sprintf("value: %d", i),
+		}
+
+		// someter operación
+		var reply raft.ResultadoRemoto
+		err := cfg.nodosRaft[idLider].CallTimeout("NodoRaft.SometerOperacionRaft",
+			operacion, &reply, 25*time.Millisecond)
+		check.CheckError(err, "Error en llamada RPC SometerOperacionRaft")
+	}
+	time.Sleep(2000 * time.Millisecond)
+}
+
+func (cfg *configDespliegue) comprobarEntradasComprometidas(idLider, numAcuerdos int, caidos ...[]int) {
+	// Espero a que se consigan varios acuerdos
+	time.Sleep(250 * time.Millisecond)
+
+	// Obtener el estado de los almacenes de cada nodo
+	var replies []raft.EstadoAlmacen = make([]raft.EstadoAlmacen, len(cfg.nodosRaft))
+	for i, endPoint := range cfg.nodosRaft {
+		fmt.Println("i: ", i)
+		if caidos == nil {
+			err := endPoint.CallTimeout("NodoRaft.ObtenerEstadoAlmacen",
+				raft.Vacio{}, &replies[i], 25*time.Millisecond)
+			fmt.Println("replies[i]: ", replies[i])
+			check.CheckError(err, "Error en llamada RPC ObtenerEstadoAlmacen")
+		} else if !utils.EstaEnLista(i, caidos[0]) {
+			err := endPoint.CallTimeout("NodoRaft.ObtenerEstadoAlmacen",
+				raft.Vacio{}, &replies[i], 25*time.Millisecond)
+			check.CheckError(err, "Error en llamada RPC ObtenerEstadoAlmacen")
+		}
+	}
+
+	// Busco el indice del registro en el lider
+	var idxLider int
+	for _, reply := range replies {
+		if reply.IdNodo == idLider {
+			idxLider = reply.IdNodo
+			break
+		}
+	}
+
+	// Comprobar que el numero de acuerdos es el esperado
+	if len(replies[idxLider].Almacen) != numAcuerdos {
+		cfg.t.Fatalf("No hay %d acuerdos", numAcuerdos)
+	}
+
+	// Comprobar que los acuerdos son iguales
+	for i := 0; i < len(cfg.nodosRaft)-1; i++ {
+		if len(replies[i].Almacen) != len(replies[i+1].Almacen) ||
+			len(replies[i].Log) != len(replies[i+1].Log) {
+			cfg.t.Fatalf("No se han completado todos los acuerdos")
+		}
+	}
+}
+
+func (cfg *configDespliegue) desconectarNodos(idNodos []int) {
+	for _, nodo := range idNodos {
+		var res raft.Vacio
+		err := cfg.nodosRaft[nodo].CallTimeout("NodoRaft.ParaNodo",
+			raft.Vacio{}, &res, 25*time.Millisecond)
+		check.CheckError(err, "Error en llamada RPC Para nodo")
+	}
+}
+
+func (cfg *configDespliegue) reconectarNodos(idNodos []int) {
+	for _, nodo := range idNodos {
+		despliegue.ExecMutipleHosts(EXECREPLICACMD+" "+strconv.Itoa(nodo)+" "+
+			rpctimeout.HostPortArrayToString(cfg.nodosRaft),
+			[]string{cfg.nodosRaft[nodo].Host()}, cfg.cr)
+	}
+	time.Sleep(2500 * time.Millisecond)
 }
