@@ -28,6 +28,13 @@ func Make(val, len int) []int {
 	return v
 }
 
+func Min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
 /**
  * @brief Devuelve True si el elemento a está en el vector v.
  *  			False en caso contrario.

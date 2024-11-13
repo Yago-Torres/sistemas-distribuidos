@@ -1,1 +1,47 @@
-127.0.0.1_29002 -> 22:50:34.912612 raft.go:128: logger initialized
+127.0.0.1_29002 -> 11:30:11.233886 raft.go:111: logger initialized
+127.0.0.1_29002 -> 11:30:11.234123 raft.go:661: YO SOY EL NIGGA, HE EMPEZADO: 1
+127.0.0.1_29002 -> 11:30:11.234222 raft.go:666: Estado: Seguidor, Mandato: 0
+127.0.0.1_29002 -> 11:30:11.407962 raft.go:372: Recive RPC.PedirVoto: Voto concedido a 2
+127.0.0.1_29002 -> 11:30:11.408595 raft.go:419: AppendEntries fue recibido de 2
+127.0.0.1_29002 -> 11:30:11.408610 raft.go:444: AppendEntries fallido: &{16700 2 -1 0 [] -1}
+127.0.0.1_29002 -> 11:30:11.408668 raft.go:419: AppendEntries fue recibido de 2
+127.0.0.1_29002 -> 11:30:11.408681 raft.go:444: AppendEntries fallido: &{16700 2 -1 0 [] -1}
+127.0.0.1_29002 -> 11:30:11.408987 raft.go:419: AppendEntries fue recibido de 2
+127.0.0.1_29002 -> 11:30:11.409011 raft.go:444: AppendEntries fallido: &{16700 2 -1 0 [] -1}
+127.0.0.1_29002 -> 11:30:11.409233 raft.go:419: AppendEntries fue recibido de 2
+127.0.0.1_29002 -> 11:30:11.409251 raft.go:444: AppendEntries fallido: &{16700 2 -1 0 [] -1}
+127.0.0.1_29002 -> 11:30:11.409449 raft.go:419: AppendEntries fue recibido de 2
+127.0.0.1_29002 -> 11:30:11.409460 raft.go:444: AppendEntries fallido: &{16700 2 -1 0 [] -1}
+127.0.0.1_29002 -> 11:30:11.409651 raft.go:419: AppendEntries fue recibido de 2
+127.0.0.1_29002 -> 11:30:11.409671 raft.go:444: AppendEntries fallido: &{16700 2 -1 0 [] -1}
+127.0.0.1_29002 -> 11:30:11.666081 raft.go:669: Estado: Candidato a lider, Mandato: 16700
+127.0.0.1_29002 -> 11:30:11.666430 raft.go:498: Se ha realizado RPC.PedirVoto: Request[1]{&{16701 1 -1 0}} -> Reply[2]{&{false 0}}
+127.0.0.1_29002 -> 11:30:11.666484 raft.go:545: recivo RPC.PedirVoto: ERROR al recibir el mensaje
+127.0.0.1_29002 -> 11:30:11.667122 raft.go:498: Se ha realizado RPC.PedirVoto: Request[1]{&{16701 1 -1 0}} -> Reply[0]{&{true 16701}}
+127.0.0.1_29002 -> 11:30:11.667148 raft.go:535: recivo RPC.PedirVoto: Voto recibido de 0
+127.0.0.1_29002 -> 11:30:11.667164 raft.go:672: Estado: Lider, Mandato: 16701
+127.0.0.1_29002 -> 11:30:11.667168 raft.go:720: Inicializando líder: Indice Comprometido:-1 Log: []
+127.0.0.1_29002 -> 11:30:11.667353 raft.go:506: RPC.AppendEntries: Request[1]{&{16701 1 -1 0 [] -1}} -> Reply[2]{&{false 0 0}}
+127.0.0.1_29002 -> 11:30:11.667399 raft.go:552: Recive RPC.AppendEntries: ERROR al recibir mensaje
+127.0.0.1_29002 -> 11:30:11.667416 raft.go:506: RPC.AppendEntries: Request[1]{&{16701 1 -1 0 [] -1}} -> Reply[2]{&{false 0 0}}
+127.0.0.1_29002 -> 11:30:11.667424 raft.go:552: Recive RPC.AppendEntries: ERROR al recibir mensaje
+127.0.0.1_29002 -> 11:30:11.667492 raft.go:506: RPC.AppendEntries: Request[1]{&{16701 1 -1 0 [] -1}} -> Reply[2]{&{false 0 0}}
+127.0.0.1_29002 -> 11:30:11.667521 raft.go:552: Recive RPC.AppendEntries: ERROR al recibir mensaje
+127.0.0.1_29002 -> 11:30:11.667538 raft.go:506: RPC.AppendEntries: Request[1]{&{16701 1 -1 0 [] -1}} -> Reply[2]{&{false 0 0}}
+127.0.0.1_29002 -> 11:30:11.667549 raft.go:552: Recive RPC.AppendEntries: ERROR al recibir mensaje
+127.0.0.1_29002 -> 11:30:11.667513 raft.go:506: RPC.AppendEntries: Request[1]{&{16701 1 -1 0 [] -1}} -> Reply[2]{&{false 0 0}}
+127.0.0.1_29002 -> 11:30:11.667630 raft.go:552: Recive RPC.AppendEntries: ERROR al recibir mensaje
+127.0.0.1_29002 -> 11:30:11.667648 raft.go:506: RPC.AppendEntries: Request[1]{&{16701 1 -1 0 [] -1}} -> Reply[0]{&{false 16701 -1}}
+127.0.0.1_29002 -> 11:30:11.667659 raft.go:579: Recive RPC.AppendEntries: NOT OK -> retrocedemos NextIndex:0 -> NextIndex:-1
+127.0.0.1_29002 -> 11:30:11.667795 raft.go:506: RPC.AppendEntries: Request[1]{&{16701 1 -1 0 [] -1}} -> Reply[2]{&{false 0 0}}
+127.0.0.1_29002 -> 11:30:11.667816 raft.go:552: Recive RPC.AppendEntries: ERROR al recibir mensaje
+127.0.0.1_29002 -> 11:30:11.667848 raft.go:506: RPC.AppendEntries: Request[1]{&{16701 1 -1 0 [] -1}} -> Reply[0]{&{false 16701 -1}}
+127.0.0.1_29002 -> 11:30:11.667896 raft.go:579: Recive RPC.AppendEntries: NOT OK -> retrocedemos NextIndex:-1 -> NextIndex:-2
+127.0.0.1_29002 -> 11:30:11.667900 raft.go:506: RPC.AppendEntries: Request[1]{&{16701 1 -1 0 [] -1}} -> Reply[0]{&{false 16701 -1}}
+127.0.0.1_29002 -> 11:30:11.667920 raft.go:579: Recive RPC.AppendEntries: NOT OK -> retrocedemos NextIndex:-2 -> NextIndex:-3
+127.0.0.1_29002 -> 11:30:11.667865 raft.go:506: RPC.AppendEntries: Request[1]{&{16701 1 -1 0 [] -1}} -> Reply[0]{&{false 16701 -1}}
+127.0.0.1_29002 -> 11:30:11.667958 raft.go:579: Recive RPC.AppendEntries: NOT OK -> retrocedemos NextIndex:-3 -> NextIndex:-4
+127.0.0.1_29002 -> 11:30:11.668043 raft.go:506: RPC.AppendEntries: Request[1]{&{16701 1 -1 0 [] -1}} -> Reply[0]{&{false 16701 -1}}
+127.0.0.1_29002 -> 11:30:11.668057 raft.go:579: Recive RPC.AppendEntries: NOT OK -> retrocedemos NextIndex:-4 -> NextIndex:-5
+127.0.0.1_29002 -> 11:30:11.668182 raft.go:506: RPC.AppendEntries: Request[1]{&{16701 1 -1 0 [] -1}} -> Reply[0]{&{false 16701 -1}}
+127.0.0.1_29002 -> 11:30:11.668198 raft.go:579: Recive RPC.AppendEntries: NOT OK -> retrocedemos NextIndex:-5 -> NextIndex:-6

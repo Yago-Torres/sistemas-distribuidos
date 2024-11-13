@@ -4,6 +4,7 @@ import (
 	//"errors"
 
 	//"log"
+
 	"net"
 	"net/rpc"
 	"os"
@@ -31,6 +32,7 @@ func main() {
 	rpc.Register(nr)
 
 	l, err := net.Listen("tcp", os.Args[2:][me])
+
 	check.CheckError(err, "Main listen error:")
 
 	rpc.Accept(l)
