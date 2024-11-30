@@ -1,0 +1,187 @@
+192.168.3.1_29250 -> 12:15:16.197516 raft.go:154: logger initialized
+192.168.3.1_29250 -> 12:15:16.667089 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:16.667494 raft.go:389: Iniciando elección en el mandato 1
+192.168.3.1_29250 -> 12:15:16.668810 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:16.669311 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:16.669442 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:17.032059 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:17.032264 raft.go:389: Iniciando elección en el mandato 2
+192.168.3.1_29250 -> 12:15:17.033261 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:17.033595 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:17.034172 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:17.604442 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:17.604616 raft.go:389: Iniciando elección en el mandato 3
+192.168.3.1_29250 -> 12:15:17.605587 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:17.605883 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:17.606585 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:17.989670 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:17.989860 raft.go:389: Iniciando elección en el mandato 4
+192.168.3.1_29250 -> 12:15:17.990856 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:17.991230 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:17.991458 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:18.431359 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:18.431552 raft.go:389: Iniciando elección en el mandato 5
+192.168.3.1_29250 -> 12:15:18.432553 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:18.432859 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:18.433066 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:18.877723 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:18.878090 raft.go:389: Iniciando elección en el mandato 6
+192.168.3.1_29250 -> 12:15:18.879594 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:18.879482 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:18.879833 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:19.367362 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:19.367560 raft.go:389: Iniciando elección en el mandato 7
+192.168.3.1_29250 -> 12:15:19.369148 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:19.369161 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:19.369443 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:19.799428 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:19.799592 raft.go:389: Iniciando elección en el mandato 8
+192.168.3.1_29250 -> 12:15:19.800768 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:19.801215 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:19.801361 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:20.379538 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:20.379732 raft.go:389: Iniciando elección en el mandato 9
+192.168.3.1_29250 -> 12:15:20.380933 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:20.380913 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:20.381368 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:20.962171 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:20.962376 raft.go:389: Iniciando elección en el mandato 10
+192.168.3.1_29250 -> 12:15:20.963659 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:20.963782 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:20.963914 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:21.358738 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:21.358907 raft.go:389: Iniciando elección en el mandato 11
+192.168.3.1_29250 -> 12:15:21.359992 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:21.360301 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:21.360453 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:21.786125 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:21.786333 raft.go:389: Iniciando elección en el mandato 12
+192.168.3.1_29250 -> 12:15:21.787747 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:21.788103 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:21.788357 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:22.338824 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:22.338996 raft.go:389: Iniciando elección en el mandato 13
+192.168.3.1_29250 -> 12:15:22.340048 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:22.340260 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:22.340391 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:22.902204 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:22.902396 raft.go:389: Iniciando elección en el mandato 14
+192.168.3.1_29250 -> 12:15:22.903492 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:22.903524 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:22.903782 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:23.296657 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:23.296853 raft.go:389: Iniciando elección en el mandato 15
+192.168.3.1_29250 -> 12:15:23.298084 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:23.298109 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:23.298389 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:23.644154 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:23.644318 raft.go:389: Iniciando elección en el mandato 16
+192.168.3.1_29250 -> 12:15:23.645245 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:23.645589 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:23.645726 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:24.154465 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:24.158396 raft.go:389: Iniciando elección en el mandato 17
+192.168.3.1_29250 -> 12:15:24.159448 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:24.159967 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:24.160133 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:24.613565 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:24.613741 raft.go:389: Iniciando elección en el mandato 18
+192.168.3.1_29250 -> 12:15:24.614900 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:24.615210 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:24.615335 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:25.207206 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:25.207405 raft.go:389: Iniciando elección en el mandato 19
+192.168.3.1_29250 -> 12:15:25.208429 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:25.208731 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:25.208861 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:25.664540 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:25.664729 raft.go:389: Iniciando elección en el mandato 20
+192.168.3.1_29250 -> 12:15:25.665941 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:25.665931 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:25.666213 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:26.125949 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:26.126143 raft.go:389: Iniciando elección en el mandato 21
+192.168.3.1_29250 -> 12:15:26.127269 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:26.127605 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:26.127740 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:26.648451 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:26.648643 raft.go:389: Iniciando elección en el mandato 22
+192.168.3.1_29250 -> 12:15:26.649662 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:26.649989 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:26.650120 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:27.162921 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:27.163136 raft.go:389: Iniciando elección en el mandato 23
+192.168.3.1_29250 -> 12:15:27.164112 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:27.164430 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:27.164564 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:27.705317 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:27.705502 raft.go:389: Iniciando elección en el mandato 24
+192.168.3.1_29250 -> 12:15:27.706499 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:27.706836 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:27.707395 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:28.278666 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:28.278839 raft.go:389: Iniciando elección en el mandato 25
+192.168.3.1_29250 -> 12:15:28.279821 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:28.279972 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:28.280097 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:28.811035 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:28.811215 raft.go:389: Iniciando elección en el mandato 26
+192.168.3.1_29250 -> 12:15:28.812193 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:28.812488 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:28.812613 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:29.354525 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:29.354741 raft.go:389: Iniciando elección en el mandato 27
+192.168.3.1_29250 -> 12:15:29.355709 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:29.355984 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:29.356102 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:29.766986 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:29.767203 raft.go:389: Iniciando elección en el mandato 28
+192.168.3.1_29250 -> 12:15:29.768539 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:29.768550 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:29.768819 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:30.208757 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:30.208929 raft.go:389: Iniciando elección en el mandato 29
+192.168.3.1_29250 -> 12:15:30.210020 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:30.210373 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:30.210504 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:30.768311 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:30.768474 raft.go:389: Iniciando elección en el mandato 30
+192.168.3.1_29250 -> 12:15:30.769293 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:30.769428 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:30.769516 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:31.078133 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:31.078345 raft.go:389: Iniciando elección en el mandato 31
+192.168.3.1_29250 -> 12:15:31.079321 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:31.079651 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:31.079786 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:31.612645 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:31.612821 raft.go:389: Iniciando elección en el mandato 32
+192.168.3.1_29250 -> 12:15:31.613736 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:31.613996 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:31.614088 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:31.977845 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:31.978064 raft.go:389: Iniciando elección en el mandato 33
+192.168.3.1_29250 -> 12:15:31.979000 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:31.979337 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:31.979471 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:32.348936 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:32.349125 raft.go:389: Iniciando elección en el mandato 34
+192.168.3.1_29250 -> 12:15:32.349850 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:32.350061 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:32.350141 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:32.663985 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:32.664225 raft.go:389: Iniciando elección en el mandato 35
+192.168.3.1_29250 -> 12:15:32.665582 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:32.665617 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:32.665980 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:33.146462 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:33.146667 raft.go:389: Iniciando elección en el mandato 36
+192.168.3.1_29250 -> 12:15:33.147709 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:33.147705 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:33.147968 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:33.489169 raft.go:463: El timeout ha expirado, comenzaré una elección
+192.168.3.1_29250 -> 12:15:33.489429 raft.go:389: Iniciando elección en el mandato 37
+192.168.3.1_29250 -> 12:15:33.490390 raft.go:618: Error en la llamada RPC o timeout: 2
+192.168.3.1_29250 -> 12:15:33.490858 raft.go:618: Error en la llamada RPC o timeout: 1
+192.168.3.1_29250 -> 12:15:33.491007 raft.go:447: No he conseguido mayoría, esperando que haya otra elección
+192.168.3.1_29250 -> 12:15:33.831733 raft.go:463: El timeout ha expirado, comenzaré una elección

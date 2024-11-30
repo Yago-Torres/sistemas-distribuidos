@@ -7,12 +7,14 @@ import (
 	"os"
 
 	//"crypto/rand"
+
 	"sync"
 	"time"
 
 	//"net/rpc"
 	"raft/internal/comun/rpctimeout"
 	"raft/internal/comun/utils"
+	//"raft/internal/comun/utils"
 )
 
 const (
@@ -20,7 +22,7 @@ const (
 	IntNOINICIALIZADO = -1
 	//  false deshabilita por completo los logs de depuracion
 	// Aseguraros de poner kEnableDebugLogs a false antes de la entrega
-	kEnableDebugLogs = true
+	kEnableDebugLogs = false
 	// Poner a true para logear a stdout en lugar de a fichero
 	kLogToStdout = false
 	// Cambiar esto para salida de logs en un directorio diferente
@@ -31,9 +33,6 @@ const (
 	Parado    = "parado"
 	Candidato = "candidato"
 	Lider     = "lider"
-
-	lectura   = "leer"
-	escritura = "escribir"
 )
 
 // aunque no se este leyendo ni escribiendo, para la realización del algoritmo, es más sencillo
@@ -81,8 +80,8 @@ type NodoRaft struct {
 	CanalHeartBeats chan bool
 	Exito           chan bool
 	AplicaOperacion chan int
+	// buffer?????
 
-	AlmacenDeOperaciones map[string]string
 }
 
 func CrearLogger(nodos []rpctimeout.HostPort, yo int) *log.Logger {
@@ -133,20 +132,22 @@ func (nr *NodoRaft) iniciarEstado() {
 	nr.CanalHeartBeats = make(chan bool)
 	nr.Exito = make(chan bool)
 	nr.AplicaOperacion = make(chan int)
-	nr.AlmacenDeOperaciones = make(map[string]string)
 
+	// Iniciar una gorutina para escuchar el canal AplicaOperacion
 	go func() {
 		for indice := range nr.AplicaOperacion {
 			nr.aplicarOperacion(indice)
 		}
 	}()
+
 }
 
 // Creacion de un nuevo nodo de eleccion
 // Tabla de <Direccion IP:puerto> de cada nodo incluido a si mismo. <Direccion IP:puerto> de este nodo esta en nodos[yo]
 // canalAplicar es un canal donde, en la practica 5, se recogerán las operaciones a aplicar a la máquina de estados. Se puede asumir que este canal se consumira de forma continúa.
 // NuevoNodo() debe devolver resultado rápido, por lo que se deberían poner en marcha Gorutinas para trabajos de larga duracion
-func NuevoNodo(nodos []rpctimeout.HostPort, yo int, canalAplicarOperacion chan AplicaOperacion) *NodoRaft {
+func NuevoNodo(nodos []rpctimeout.HostPort, yo int,
+	canalAplicarOperacion chan AplicaOperacion) *NodoRaft {
 	nr := &NodoRaft{}
 	nr.Nodos = nodos
 	nr.Yo = yo
@@ -175,6 +176,7 @@ func (nr *NodoRaft) para() {
 // El tercer valor es true si el nodo cree ser el lider
 // Cuarto valor es el lider, es el indice del líder si no es él
 func (nr *NodoRaft) obtenerEstado() (int, int, bool, int) {
+
 	yo := nr.Yo
 	mandato := nr.Estado.MandatoActual
 	esLider := nr.RolActual == Lider
@@ -184,6 +186,7 @@ func (nr *NodoRaft) obtenerEstado() (int, int, bool, int) {
 	} else {
 		idLider = nr.IdLider
 	}
+
 	return yo, mandato, esLider, idLider
 }
 
@@ -208,7 +211,7 @@ func (nr *NodoRaft) obtenerEstado() (int, int, bool, int) {
 func (nr *NodoRaft) someterOperacion(operacion TipoOperacion) (int, int,
 	bool, int, string) {
 
-	// todo sin inicializar inicialmente
+	// Inicializaciones
 	indice := IntNOINICIALIZADO
 	mandato := IntNOINICIALIZADO
 	EsLider := false
@@ -220,32 +223,28 @@ func (nr *NodoRaft) someterOperacion(operacion TipoOperacion) (int, int,
 		return indice, mandato, EsLider, idLider, valorADevolver
 	}
 
-	// appendo la información a mi log porque soy el lider
 	indice = len(nr.Estado.Log)
+	// Actualizar índices
+
 	mandato = nr.Estado.MandatoActual
 	EsLider = true
 	idLider = nr.Yo
+
 	nr.Estado.Log = append(nr.Estado.Log, AplicaOperacion{Indice: indice, Mandato: mandato, Operacion: operacion})
+
 	nr.Logger.Printf("Operación ha sido añadida al log: %v", operacion)
+
+	nr.Logger.Printf("Operación añadida al log en índice %d: %v", indice, operacion)
 	return indice, mandato, EsLider, idLider, valorADevolver
 }
 
 // Actualizar log, necesario para cuando el seguidor no tenga el mismo log que el lider, hay que actualizarlo
-func (nr *NodoRaft) actualizarLog(logLength int, leaderCommit int,
-	entries []AplicaOperacion) {
-	// explicación del código de forma humana:
-
-	// eliminar comflictos -> Si el seguidor tiene entradas que no coinciden con las del líder, se eliminarán
-	// agregar entradas que faltan -> Si el log del seguidor es más corto, se añaden las entradas del líder.
-	// aplicar entradas nuevas que se han mandado como comprometidas -> Si el líder ha marcado nuevas entradas como comprometidas,
-	// se aplican a la máquina de estados del seguidor.
-	// Tras esta funcion, está sincronizado el log y el estado comprometido del líder.
-
+func (nr *NodoRaft) actualizarLog(logLength int, leaderCommit int, entries []AplicaOperacion) {
+	// Si `entries` está vacío y `leaderCommit` es igual al índice de compromiso actual, no hace falta actualizar nada
 	if len(entries) == 0 && leaderCommit <= nr.Estado.indiceComprometido {
-		nr.Logger.Println("Latido recibido sin cambios en el log")
+		//nr.Logger.Println("Latido recibido sin cambios en el log")
 		return
 	}
-
 	if len(entries) > 0 && len(nr.Estado.Log) > logLength {
 		if logLength == entries[0].Indice && nr.Estado.Log[logLength].Mandato == entries[0].Mandato {
 			nr.Logger.Printf("Conflicto t1: coincide índice y mandato, corto log a %d", logLength)
@@ -259,17 +258,21 @@ func (nr *NodoRaft) actualizarLog(logLength int, leaderCommit int,
 	if (logLength + len(entries)) > len(nr.Estado.Log) {
 		nr.Logger.Println("Añadimos las entradas entries al log")
 		nr.Estado.Log = append(nr.Estado.Log, entries...)
+		//nr.Logger.Printf("Ahora el log del seguidor es: ")
+		//nr.Logger.Println(nr.Estado.Log)
 	}
 
 	if leaderCommit > nr.Estado.indiceComprometido {
-		nr.Logger.Println("Aplicaremos a la máquina de estados aquellas entradas no aplicadas (no eran comunes)")
+		nr.Logger.Println("Aplicaremos a la máquina de estados aquellas entradas no aplicadas")
+		//nr.Logger.Println(leaderCommit)
+		//nr.Logger.Println(nr.Estado.indiceComprometido)
 		siguiente := nr.Estado.indiceComprometido + 1
 		nr.Estado.indiceComprometido = leaderCommit
 
 		for i := siguiente; i <= nr.Estado.indiceComprometido; i++ {
+			//nr.Logger.Println("Hay que aplicar una operacion a una maquina de estados")
 			nr.AplicaOperacion <- i
 		}
-
 	}
 }
 
@@ -291,23 +294,13 @@ type EstadoParcial struct {
 }
 
 type EstadoRemoto struct {
-	IdNodo       int
-	Mandato      int
-	EsLider      bool
-	IdLider      int
-	IndiceCommit int
+	IdNodo int
+	EstadoParcial
 }
 
 func (nr *NodoRaft) ObtenerEstadoNodo(args Vacio, reply *EstadoRemoto) error {
 	reply.IdNodo, reply.Mandato, reply.EsLider, reply.IdLider = nr.obtenerEstado()
 	return nil
-}
-
-// estructura para el estado del almacenamiento, se usa en el RPC ObtenerEstadoAlmacen
-type EstadoAlmacen struct {
-	IdNodo  int
-	Log     []AplicaOperacion
-	Almacen map[string]string
 }
 
 type ResultadoRemoto struct {
@@ -413,26 +406,41 @@ func convertToAplicaOperacion(entries []TipoOperacion, startIndex int, mandato i
 }
 
 // Metodo de tratamiento de llamadas RPC AppendEntries
-func (nr *NodoRaft) AppendEntries(args *ArgAppendEntries,
-	results *Results) error {
-
-	nr.Logger.Printf("AppendEntries fue recibido de %d", args.IdLider)
+func (nr *NodoRaft) AppendEntries(args *ArgAppendEntries, results *Results) error {
+	//nr.Logger.Printf("AppendEntries fue recibido de %d", args.IdLider)
 
 	if args.Mandato > nr.Estado.MandatoActual {
-		nr.Logger.Println("RECV RPC.AppendEntries: Voy por detras")
+		nr.Logger.Println("RECV RPC.AppendEntries: Voy por detrás")
 		nr.Estado.MandatoActual = args.Mandato
 		nr.Estado.HeVotadoA = IntNOINICIALIZADO
+	}
 
+	// Comprobar si el log está alineado
+	isLogOK := len(nr.Estado.Log)-1 >= args.PrevLogIndex
+	if isLogOK && args.PrevLogIndex > -1 {
+		isLogOK = args.PrevLogTerm == nr.Estado.Log[args.PrevLogIndex].Mandato
+	}
+
+	// Si el mandato es válido y el log está alineado, aceptar las entradas
+	if args.Mandato == nr.Estado.MandatoActual && isLogOK {
+		nr.Logger.Printf("recibo RPC.AppendEntries: %v\n", args.Entries)
+		nr.RolActual = Seguidor
+		nr.IdLider = args.IdLider
+
+		// 1. Convertir las entradas a AplicaOperacion y actualizarlas en el log
 		aplicaEntries := convertToAplicaOperacion(args.Entries, args.PrevLogIndex+1, args.Mandato)
 		nr.actualizarLog(args.PrevLogIndex+1, args.LeaderCommit, aplicaEntries)
 
+		// 2. Ahora que el log está actualizado, podemos proceder a comprometer entradas
 		if args.LeaderCommit > nr.Estado.indiceComprometido {
 			nr.Logger.Println("Actualizando índice de compromiso basado en LeaderCommit")
-			nr.Estado.indiceComprometido = min(args.LeaderCommit, len(nr.Estado.Log)-1)
+			nr.Estado.indiceComprometido = utils.Min(args.LeaderCommit, len(nr.Estado.Log)-1)
 
+			// 3. Aplicar las entradas comprometidas a la máquina de estados
 			for i := nr.Estado.indiceComprometido + 1; i <= nr.Estado.indiceComprometido; i++ {
 				nr.AplicaOperacion <- i
 			}
+
 			nr.Logger.Println("Entradas comprometidas y aplicadas")
 		}
 
@@ -448,15 +456,6 @@ func (nr *NodoRaft) AppendEntries(args *ArgAppendEntries,
 	}
 
 	return nil
-
-}
-
-// funcion para calcular el mínimo de dos ints
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
 }
 
 // --------------------------------------------------------------------------
@@ -492,33 +491,28 @@ func min(a, b int) int {
 func (nr *NodoRaft) enviarPeticionVoto(nodo int, args *ArgsPeticionVoto,
 	reply *RespuestaPeticionVoto) bool {
 
-	//creo que aquí hay que añadir lo de randomtime, para que no vayan todos a la vez solicitando la primera vez y nadie resuelva
-	err := nr.Nodos[nodo].CallTimeout("NodoRaft.PedirVoto", args, reply, 25*time.Millisecond)
-
-	nr.Logger.Printf("Se ha realizado RPC.PedirVoto: Request[%d]{%v} -> Reply[%d]{%v}", nr.Yo, args, nodo, reply)
+	err := nr.Nodos[nodo].CallTimeout("NodoRaft.PedirVoto", args, reply, 250*time.Millisecond)
+	//nr.Logger.Printf("Se ha realizado RPC.PedirVoto: Request[%d]{%v} -> Reply[%d]{%v}", nr.Yo, args, nodo, reply)
 	return err == nil
 }
 
 func (nr *NodoRaft) enviarEntradasAppend(nodo int, args *ArgAppendEntries, reply *Results) bool {
-
-	err := nr.Nodos[nodo].CallTimeout("NodoRaft.AppendEntries", args, reply, 25*time.Millisecond)
-
-	nr.Logger.Printf("RPC.AppendEntries: Request[%d]{%v} -> Reply[%d]{%v}", nr.Yo, args, nodo, reply)
+	err := nr.Nodos[nodo].CallTimeout("NodoRaft.AppendEntries", args, reply, 250*time.Millisecond)
+	//nr.Logger.Printf("RPC.AppendEntries: Request[%d]{%v} -> Reply[%d]{%v}", nr.Yo, args, nodo, reply)
 	return err == nil
 }
 
 func (nr *NodoRaft) iniciarEleccion() {
+	nr.Logger.Printf("Comenzando nueva elección, con mandato: %d\n", nr.Estado.MandatoActual+1)
 
-	nr.Estado.HeVotadoA = nr.Yo
 	nr.Estado.MandatoActual++
-
+	nr.Estado.HeVotadoA = nr.Yo
 	args := ArgsPeticionVoto{nr.Estado.MandatoActual, nr.Yo, -1, 0}
 	if len(nr.Estado.Log) > 0 {
 		args.UltimoIndiceLogged = len(nr.Estado.Log) - 1
 		args.UltimoMandatoLogged = nr.Estado.Log[args.UltimoIndiceLogged].Mandato
 
 	}
-
 	for nodos := range nr.Nodos {
 		if nodos != nr.Yo {
 			var respuesta RespuestaPeticionVoto
@@ -531,7 +525,8 @@ func (nr *NodoRaft) peticionVoto(nodo int,
 	args *ArgsPeticionVoto, reply *RespuestaPeticionVoto) {
 	if nr.enviarPeticionVoto(nodo, args, reply) {
 		nr.Mux.Lock()
-		if nr.RolActual == Candidato && reply.MandatoReply == nr.Estado.MandatoActual && reply.VotoParaTi {
+		if nr.RolActual == Candidato &&
+			reply.MandatoReply == nr.Estado.MandatoActual && reply.VotoParaTi {
 			nr.Logger.Printf("recivo RPC.PedirVoto: Voto recibido de %d\n", nodo)
 			nr.CanalVotos <- true
 		} else if reply.MandatoReply > nr.Estado.MandatoActual {
@@ -594,35 +589,35 @@ func (nr *NodoRaft) solicitoLatido(nodo int, args *ArgAppendEntries, respuesta *
 
 // función que envia heartbeats a los nodos que no son yo, si yo soy el lider
 func (nr *NodoRaft) EnviarHeartBeat() {
+
+	args := ArgAppendEntries{
+		Mandato:      nr.Estado.MandatoActual,
+		IdLider:      nr.Yo,
+		PrevLogIndex: IntNOINICIALIZADO,
+		PrevLogTerm:  0,
+		Entries:      nil,
+		LeaderCommit: nr.Estado.indiceComprometido,
+	}
+
+	nr.Logger.Printf("Enviando heartbeat con LeaderCommit: %d", nr.Estado.indiceComprometido)
+
 	for nodo := range nr.Nodos {
 		if nodo != nr.Yo {
-			args := ArgAppendEntries{
-				Mandato:      nr.Estado.MandatoActual,
-				IdLider:      nr.Yo,
-				PrevLogIndex: nr.Estado.nextIndex[nodo] - 1,
-				PrevLogTerm:  0,
-				Entries:      nil,
-				LeaderCommit: nr.Estado.indiceComprometido,
+			var reply Results
+			args.PrevLogIndex = nr.Estado.nextIndex[nodo] - 1
+			if args.PrevLogIndex > -1 && args.PrevLogIndex < len(nr.Estado.Log) {
+				args.PrevLogTerm = nr.Estado.Log[args.PrevLogIndex].Mandato
 			}
 
-			for nodo := range nr.Nodos {
-				if nodo != nr.Yo {
-					var reply Results
-					args.PrevLogIndex = nr.Estado.nextIndex[nodo] - 1
-					if args.PrevLogIndex > -1 && args.PrevLogIndex < len(nr.Estado.Log) {
-						args.PrevLogTerm = nr.Estado.Log[args.PrevLogIndex].Mandato
-					}
-
-					if nr.Estado.nextIndex[nodo] < len(nr.Estado.Log) {
-						args.Entries = convertToTipoOperacion(nr.Estado.Log[nr.Estado.nextIndex[nodo]:])
-					} else {
-						args.Entries = nil
-					}
-					go nr.solicitoLatido(nodo, &args, &reply)
-				}
+			if nr.Estado.nextIndex[nodo] < len(nr.Estado.Log) {
+				args.Entries = convertToTipoOperacion(nr.Estado.Log[nr.Estado.nextIndex[nodo]:])
+			} else {
+				args.Entries = nil
 			}
+			go nr.solicitoLatido(nodo, &args, &reply)
 		}
 	}
+
 }
 
 func convertToTipoOperacion(entries []AplicaOperacion) []TipoOperacion {
@@ -633,13 +628,14 @@ func convertToTipoOperacion(entries []AplicaOperacion) []TipoOperacion {
 	return ops
 }
 
-func (nr *NodoRaft) contarAcks(index int) int {
-	acks := 1
-	for nodo := range nr.Nodos {
-		if nodo != nr.Yo && nr.Estado.matchIndex[nodo] >= index {
+func (nr *NodoRaft) contarAcks(indice int) int {
+	acks := 1 // Contar el propio líder
+	for i := range nr.Nodos {
+		if i != nr.Yo && nr.Estado.matchIndex[i] >= indice {
 			acks++
 		}
 	}
+	nr.Logger.Printf("Contando ACKs para índice %d: %d acks recibidos", indice, acks)
 	return acks
 }
 
@@ -652,14 +648,29 @@ func (nr *NodoRaft) ComprometerEntradasLog() {
 			nr.AplicaOperacion <- i
 		}
 	}
+
+	/*
+	   // Actualizar el índice comprometido y aplicar las operaciones
+
+	   	if maxIndiceComprometido > nr.Estado.indiceComprometido {
+	   		oldCommit := nr.Estado.indiceComprometido
+	   		nr.Estado.indiceComprometido = maxIndiceComprometido
+	   		nr.Logger.Printf("ComprometerEntradasLog: índice actualizado de %d a %d",
+	   			oldCommit, nr.Estado.indiceComprometido)
+
+	   		// Aplicar todas las operaciones nuevamente comprometidas
+	   		for i := oldCommit + 1; i <= maxIndiceComprometido; i++ {
+	   			nr.AplicaOperacion <- i
+	   		}
+	   		nr.Logger.Printf("Índice comprometido actualizado a %d", maxIndiceComprometido)
+	   	}
+	*/
 }
 
 // gestión de la máquina de estados
 
 func (nr *NodoRaft) appLoop() {
-
-	nr.Logger.Printf("YO SOY EL NIGGA, HE EMPEZADO: %d\n", nr.Yo)
-
+	//time.Sleep(2000 * time.Millisecond) // sleep inicial para que empiecen todos
 	for {
 		switch nr.RolActual { // switch en el que gestionamos que rol soy en cada momento, y que hago con ello
 		case Seguidor:
@@ -725,17 +736,17 @@ func (nr *NodoRaft) liderLoop() {
 
 	nr.convertirALider()
 
-	nr.EnviarHeartBeat()
-
 	for nr.RolActual == Lider {
 		select {
 		case <-ticker.C:
 			nr.EnviarHeartBeat()
-
 		}
 	}
 }
 
+/**
+ * @brief Convierte el nodo en líder y configura sus índices de seguimiento.
+ */
 func (nr *NodoRaft) convertirALider() {
 	nr.RolActual = Lider
 	nr.IdLider = nr.Yo
@@ -755,23 +766,24 @@ func (nr *NodoRaft) ObtenerIndiceComprometido(args Vacio, reply *RespuestaIndice
 	defer nr.Mux.Unlock()
 
 	reply.CommitIndex = nr.Estado.indiceComprometido
+	nr.Logger.Printf("ObtenerIndiceComprometido: Nodo %d devolviendo índice %d",
+		nr.Yo, nr.Estado.indiceComprometido)
 	return nil
 }
 
+// Modificar el método aplicarOperacion para manejar el nuevo orden
 func (nr *NodoRaft) aplicarOperacion(indice int) {
 	nr.Mux.Lock()
 	defer nr.Mux.Unlock()
 
 	if indice < len(nr.Estado.Log) {
 		operacion := nr.Estado.Log[indice]
-		nr.Logger.Printf("Aplicando operación a la máquina de estados: %v\n", operacion.Operacion)
+		nr.Logger.Printf("Aplicando operación ordenada: %v", operacion.Operacion)
 
-		// Aquí deberías aplicar la operación a la máquina de estados
-		// Por ejemplo:
 		if operacion.Operacion.Operacion == "escribir" {
-			nr.Logger.Printf("Escribiendo clave %s con valor %s\n", operacion.Operacion.Clave, operacion.Operacion.Valor)
-		} else if operacion.Operacion.Operacion == "leer" {
-			nr.Logger.Printf("Leyendo clave %s\n", operacion.Operacion.Clave)
+			nr.Logger.Printf("Escribiendo clave %s con valor %s",
+				operacion.Operacion.Clave,
+				operacion.Operacion.Valor)
 		}
 	}
 }

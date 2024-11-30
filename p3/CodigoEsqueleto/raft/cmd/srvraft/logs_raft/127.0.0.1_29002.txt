@@ -1,0 +1,43 @@
+127.0.0.1_29002 -> 19:04:03.517365 raft.go:154: logger initialized
+127.0.0.1_29002 -> 19:04:14.444196 raft.go:461: El timeout ha expirado, comenzaré una elección
+127.0.0.1_29002 -> 19:04:14.445596 raft.go:392: Iniciando elección en el mandato 2
+127.0.0.1_29002 -> 19:04:14.446589 raft.go:614: Error en la llamada RPC o timeout: 1
+127.0.0.1_29002 -> 19:04:14.448983 raft.go:608: voto concedido por el nodo: 0
+127.0.0.1_29002 -> 19:04:14.449354 raft.go:439: He ganado, soy el nuevo líder en el mandato 2
+127.0.0.1_29002 -> 19:04:14.555710 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:14.654114 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:14.754448 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:14.853637 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:14.954485 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:15.053567 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:15.153595 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:15.254834 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:15.354329 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:15.454307 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:15.554471 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:15.653695 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:15.754943 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:15.854109 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:15.954613 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:16.058637 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:16.154726 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:16.254741 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:16.354271 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:16.454458 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:16.554409 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:16.653932 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:16.754184 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:16.853303 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:16.953457 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:17.055562 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:17.153751 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:17.254303 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:17.352881 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:17.454534 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:17.554088 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:17.654759 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:17.753082 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:17.853880 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:17.953997 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:18.053809 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0
+127.0.0.1_29002 -> 19:04:18.154142 raft.go:694: Nodo 0 ha replicado correctamente hasta el índice 0

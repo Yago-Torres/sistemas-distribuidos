@@ -1,0 +1,45 @@
+# Roadmap Práctica 5: Kubernetes y Raft
+
+## 1. Configuración del Entorno
+- ~~Instalar Docker~~
+- ~~ Instalar kubectl~~
+- ~~Instalar kind~~
+- ~~Verificar las instalaciones~~
+- ~~Crear el clúster Kubernetes local~~
+
+## 2. Adaptar el Código de la Aplicación
+- [ ] Revisar el código para recuperación de estado y configuración dinámica
+- [ ] Adaptar el servidor RPC
+- [ ] Compilar ejecutables Golang
+
+## 3. Crear Contenedores Docker
+- [ ] Escribir Dockerfile para servidor, cliente y pruebas
+- [ ] Construir imágenes Docker
+- [ ] Subir imágenes al registro local
+- [ ] Validar las imágenes
+
+## 4. Configurar Kubernetes
+- [ ] Crear manifiestos YAML para pods básicos
+- [ ] Crear manifiestos YAML para deployments
+- [ ] Crear manifiestos YAML para statefulsets
+- [ ] Desplegar los manifiestos
+
+## 5. Validación
+- [ ] Probar recuperación de estado de réplicas
+- [ ] Simular fallos eliminando Pods
+- [ ] Ejecutar pruebas desde un cliente
+- [ ] Recoger logs
+
+## 6. Documentación
+- [ ] Redactar la memoria
+- [ ] Empaquetar todo en un archivo `.tar.gz`
+
+## 7. Entrega
+- [ ] Subir el archivo `.tar.gz` a Moodle
+- [ ] Preparar la defensa de la práctica
+
+## 8. Sección de Avances
+
+### Fecha:
+- [ ] Actividad realizada:
+- Notas:

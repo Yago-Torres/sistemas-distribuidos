@@ -11,7 +11,7 @@ var generator = rand.New(seed)
 
 // ElectionTimeout especifica el tiempo para comenzar una nueva elección.
 func ElectionTimeout() time.Duration {
-	return time.Duration(generator.Intn(150)+150) * time.Millisecond // 100-500ms
+	return time.Duration(generator.Intn(400)+100) * time.Millisecond // 100-500ms
 }
 
 /**
@@ -28,13 +28,6 @@ func Make(val, len int) []int {
 	return v
 }
 
-func Min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
 /**
  * @brief Devuelve True si el elemento a está en el vector v.
  *  			False en caso contrario.
@@ -49,4 +42,11 @@ func EstaEnLista(a int, v []int) bool {
 		}
 	}
 	return false
+}
+
+func Min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }
